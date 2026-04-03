@@ -1,29 +1,26 @@
-using System.Text.RegularExpressions;
 namespace Module.Core;
 
 public class JsonPathExtractor : IJsonPathExtractor
 {
     public string? ExtractValue(string json, string path)
     {
-        if (string.IsNullOrEmpty(json)) return null;
-        if (string.IsNullOrEmpty(path)) return null;
+        var keys = path.Split('.');
+        string temp = json;
 
-        var keys = path.Replace("$", "").Trim('.').Split('.');
-        string currentObj = json;
-
-        foreach (var key in keys)
+        foreach (var k in keys)
         {
-            // Регулярное выражение ищет "key" : "value" или "key" : число/булево
-            var pattern = $"\"{key}\"\\s*:\\s*(\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\"|[^{{}}\\[\\],]+)";
-            var match = Regex.Match(currentObj, pattern);
+            var keyName = k.Replace("$", "");
+            var start = temp.IndexOf($"\"{keyName}\"");
+            if (start == -1) return null;
 
-            if (!match.Success) return null;
+            var valStart = temp.IndexOf(':', start) + 1;
+            var valEnd = temp.IndexOf(',', valStart);
+            if (valEnd == -1) valEnd = temp.IndexOf('}', valStart);
+            if (valEnd == -1) return null;
 
-            // Берём часть после двоеточия
-            var value = match.Value.Split(':', 2)[1].Trim();
-            currentObj = value;
+            temp = temp.Substring(valStart, valEnd - valStart).Trim();
         }
 
-        return currentObj.Trim('"');
+        return temp.Trim('"');
     }
 }
