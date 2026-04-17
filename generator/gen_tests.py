@@ -6,7 +6,7 @@ from typing import Dict, List, Any
 TEST_FILE_TEMPLATE = """// AUTO-GENERATED. DO NOT EDIT MANUALLY.
 using System;
 using NUnit.Framework;
-using Lab.Interfaces;
+using Lab.Interfaces;  
 using {namespace};
 
 namespace Module.Tests

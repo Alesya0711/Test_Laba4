@@ -3,7 +3,7 @@ non_functional_requirements:
   - id: NFR-1
     desc: "Парсинг без сторонних библиотек"
   - id: NFR-2
-    desc: "Корректная обработка null, пустых строк и граничных случаев"
+    desc: "Корректная обработка null, пустых строк и граничных случаев"  
 
 methods:
   - name: ExtractValue
